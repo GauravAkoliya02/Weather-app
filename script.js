@@ -13,21 +13,19 @@ async function checkWeather(city) {
     document.querySelector(".error").style.display = "block";
     document.querySelector(".weather").style.display = "none";
   } else {
-    var data = await response.json();
+    const data = await response.json();
 
     document.querySelector(".city").innerHTML = data.name;
     document.querySelector(".temp").innerHTML =
       Math.round(data.main.temp) + "°C";
 
-    // ✅ humidity fix
     document.querySelector(".humidity").innerHTML =
       data.main.humidity + "%";
 
-    // ✅ wind speed
     document.querySelector(".wind").innerHTML =
       data.wind.speed + " km/h";
 
-    // icon logic
+    // weather icon logic
     if (data.weather[0].main == "Clouds") {
       weatherIcon.src = "img/clouds.png";
     } else if (data.weather[0].main == "Clear") {
@@ -45,10 +43,19 @@ async function checkWeather(city) {
   }
 }
 
-// click event
+// ✅ button click search
 searchBtn.addEventListener("click", () => {
-  checkWeather(searchBox.value);
+  const city = searchBox.value.trim();
+  if (city !== "") checkWeather(city);
 });
 
-// default city (optional)
+// ✅ ENTER key search
+searchBox.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    const city = searchBox.value.trim();
+    if (city !== "") checkWeather(city);
+  }
+});
+
+// ✅ default city
 checkWeather("Delhi");
