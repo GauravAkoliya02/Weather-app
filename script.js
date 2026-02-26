@@ -1,11 +1,12 @@
 const apiKey = "7d5e74e7b112e34001dc87b79a2fc7c3";
 const apiUrl =
   "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
 const searchBox = document.querySelector(".search input");
 const searchBtn = document.querySelector(".search button");
 const weatherIcon = document.querySelector(".weather-icon");
 
-async function checkWheather(city) {
+async function checkWeather(city) {
   const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
 
   if (response.status == 404) {
@@ -16,10 +17,17 @@ async function checkWheather(city) {
 
     document.querySelector(".city").innerHTML = data.name;
     document.querySelector(".temp").innerHTML =
-      Math.round(data.main.temp) + "*C";
-    document.querySelector(".humidity").innerHTML = data.wind.speed + " km/h";
+      Math.round(data.main.temp) + "°C";
 
-    console.log(data.weather[0].main);
+    // ✅ humidity fix
+    document.querySelector(".humidity").innerHTML =
+      data.main.humidity + "%";
+
+    // ✅ wind speed
+    document.querySelector(".wind").innerHTML =
+      data.wind.speed + " km/h";
+
+    // icon logic
     if (data.weather[0].main == "Clouds") {
       weatherIcon.src = "img/clouds.png";
     } else if (data.weather[0].main == "Clear") {
@@ -37,8 +45,10 @@ async function checkWheather(city) {
   }
 }
 
+// click event
 searchBtn.addEventListener("click", () => {
-  checkWheather(searchBox.value);
+  checkWeather(searchBox.value);
 });
 
-checkWheather();
+// default city (optional)
+checkWeather("Delhi");
